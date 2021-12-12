@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 from matplotlib import pyplot as plt
 
-image=cv2.imread('')
+image=cv2.imread('')  #file location
 
  
 # Reading the image from the present directory
