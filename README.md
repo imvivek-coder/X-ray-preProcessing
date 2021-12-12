@@ -11,107 +11,44 @@ To determine the
 noise pixels, we defined a simple criterias
 It is being called adaptive because it changes it property after each iterations
 
+![image](https://user-images.githubusercontent.com/87460369/145703523-8050efb0-7a82-4aa4-8b31-c395c6083b75.png)
+![image](https://user-images.githubusercontent.com/87460369/145703528-5512e13a-91bd-4b2a-a773-fd163b6d0487.png)
 
 
-# CODE:
+# Contrast Enhancement using CLAHE
 
-function AdaptiveFilter(image,MaxSizeFilter)
-%         AdaptiveFilter(image,MaxSizeFilter)
-%                 remove noise by changing the size of filter
-%                 image : tasvir noisy
-%                 MaxSizeFilter : maximum size of filter 
-%
-%                   AdaptiveFilter start from 3*3 filter
-%                   and if noise don't remove,greats size of filter
-%                   until MaxSizeFilter and repeat removing noise
-global imag;
-global imageTemp;
-[x,y]=size(image);
-imag=double(image);
-imag=MedianFilter(MaxSizeFilter);
- 
-Q=MaxSizeFilter-ceil(MaxSizeFilter/2);%cut image
-imag=imag(Q:Q+x-1,Q:Q+y-1);
-figure();
-imshow(uint8(imag),[]);
-end
-function output=MedianFilter(MaxSizeFilter)% x: row number and y: col number
-global imag;
-global imageTemp;
-    
-[xb,yb]=size(imag);
- 
-imageTemp=zeros(xb,yb);
-imag=Padding(MaxSizeFilter);
- 
-StartPoint=MaxSizeFilter-floor(MaxSizeFilter/2);%chon tasvir pad shode bayad noqte shoroe tasvire asli
-                                                 % baraye mohasebat peyda
-                                                 % shavad (be tedade size
-                                                 % tasvire asli bayad
-                                                 % mohasebat anjam bedim)
-                                                %ke markaze panjere filter ast 
-for i=StartPoint:StartPoint+(xb-1)
-    for j=StartPoint:StartPoint+(yb-1)
-               
-        Computation(3,MaxSizeFilter,i,j);
-               
-    end
-end
-output=imageTemp;
-end
- 
- 
-function Computation(FilterSize,MaxFilterSize,i,j)
-global imageTemp;
-global imag;
- 
-            Zxy=0;
-            
-            justification=ceil((FilterSize-1)/2);
-            AreaNeighberhood=imag(i-justification:i+justification,j-justification:j+justification);
-            sortedArea=sort(AreaNeighberhood(:));
-            % obtain variables for computation
-            Zmin=sortedArea(1);
-            Zmax=sortedArea(end);
-            Zmed=median(sortedArea);
-            Zxy=imag(i,j);
-            
-            B1=Zxy-Zmin;
-            B2=Zxy-Zmax;
-            if(B1>0 && B2<0)
-                imageTemp(i,j)=Zxy;
-                return;
-            else
-                A1=Zmed-Zmin;
-                A2=Zmed-Zmax;
-                if(A1>0 && A2<0)
-                    imageTemp(i,j)=Zmed;
-                    return;
-                else
-                    if(FilterSize<MaxFilterSize)
-                        FilterSize=FilterSize+2;
-                        Computation(FilterSize,MaxFilterSize,i,j);
-                        return;
-                    else
-                        imageTemp(i,j)=Zmed;
-                    end
-                end
-            end
-end
- 
-function output=Padding(maxPadd)
-global imag;
- 
- counterPadding=floor((maxPadd-1)/2);
- while(counterPadding)
-     imag=[imag(:,1) imag imag(:,end)]; % or imag=[imag(:,1,:) imag imag(:,end,:)];
-     imag=[imag(1,:);imag;imag(end,:)]; % or imag=[imag(1,:,:);imag;imag(end,:,:)];
-     counterPadding=counterPadding-1;
- end
- output=imag;
-end
+## Normal Histogram Equalization
+Histogram equalization is a basic image processing technique that
+adjusts the global contrast of an image by updating the image
+histogram’s pixel intensity distribution. Doing so enables areas of low
+contrast to obtain higher contrast in the output image.
+Essentially, histogram equalization works by:
+• Computing a histogram of image pixel intensities
+• Evenly spreading out and distributing the most frequent pixel values
+(i.e., the ones with the largest counts in the histogram)
+• Giving a linear trend to the cumulative distribution function (CDF)
+
+![image](https://user-images.githubusercontent.com/87460369/145703578-b605469f-f88d-40e0-9dcd-dacc3e6b3f37.png)
+
+## X-Ray Original vs X-Ray histogram equalized plot
+
+![image](https://user-images.githubusercontent.com/87460369/145703930-50a18c91-2bc4-4ac1-ba13-96ef57415aa3.png)   ![image](https://user-images.githubusercontent.com/87460369/145703934-08428f5a-c00e-4d8d-8a84-d600e6694b50.png)
 
 
+## Contrast limited Adaptive Histogram equalization(CLAHE)
+• CLAHE limits the amplification by clipping the histogram at a predefined value before computing
+the CDF. <br>
+• In this we limit the slope of transformation function by a so called clip limit.<br>
+• It is advantageous not to discard the part of the histogram that exceeds the clip limit but to
+redistribute it equally among all histogram bins
 
+## X-Ray Original vs X-Ray CLAHE equalized
+
+![image](https://user-images.githubusercontent.com/87460369/145704003-2e726577-39b0-4d40-a4b2-6fad1768287a.png)
+
+## X-Ray Original vs X-Ray CLAHE equalized plot
+
+![image](https://user-images.githubusercontent.com/87460369/145704022-99a218c8-98fe-447f-8fda-043ee943eab5.png)
+![image](https://user-images.githubusercontent.com/87460369/145704030-f6ff6851-94ed-4a2b-bd0d-4dd594b75d5a.png)
 
 
