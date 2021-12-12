@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 from matplotlib import pyplot as plt
 
-image=cv2.imread('/home/imvivek/Documents/CSE/Image processing/OpenCV/images/nejmc2001573_f1b.jpeg',0)
+image=cv2.imread('')
 
  
 # Reading the image from the present directory
